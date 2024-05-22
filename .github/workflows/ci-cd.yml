@@ -3,7 +3,7 @@ name: CI/CD
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
@@ -31,12 +31,7 @@ jobs:
       run: |
         docker build -t us.icr.io/$MY_NAMESPACE/medical_app .
         docker tag us.icr.io/$MY_NAMESPACE/medical_app:latest us.icr.io/$MY_NAMESPACE/medical_app:latest
-    - name: Log into IBM Cloud Container Registry
-      uses: IBM-Cloud/ibmcloud-login@v1
-      with:
-        api_key: ${{ secrets.IBM_CLOUD_API_KEY }}
-        region: us-south # Update this with your IBM Cloud region
-        resource_group: default # Update this with your IBM Cloud resource group
+
     - name: Push Docker image
       run: |
-        docker push us.icr.io/$MY_NAMESPACE/your_image_name:latest
+        docker push us.icr.io/$MY_NAMESPACE/medical_app:latest
