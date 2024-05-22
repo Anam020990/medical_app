@@ -1,0 +1,42 @@
+name: CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build
+      run: npm run build
+
+    - name: Test
+      run: npm test
+
+    - name: Build Docker image
+      run: |
+        docker build -t us.icr.io/$MY_NAMESPACE/medical_app .
+        docker tag us.icr.io/$MY_NAMESPACE/medical_app:latest us.icr.io/$MY_NAMESPACE/medical_app:latest
+    - name: Log into IBM Cloud Container Registry
+      uses: IBM-Cloud/ibmcloud-login@v1
+      with:
+        api_key: ${{ secrets.IBM_CLOUD_API_KEY }}
+        region: us-south # Update this with your IBM Cloud region
+        resource_group: default # Update this with your IBM Cloud resource group
+    - name: Push Docker image
+      run: |
+        docker push us.icr.io/$MY_NAMESPACE/your_image_name:latest
