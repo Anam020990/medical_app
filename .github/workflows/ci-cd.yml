@@ -27,9 +27,9 @@ jobs:
 
     - name: Build Docker image
       run: |
-        docker build -t us.icr.io/$MY_NAMESPACE/medical_app .
-        docker tag us.icr.io/$MY_NAMESPACE/medical_app:latest us.icr.io/$MY_NAMESPACE/medical_app:latest
+        docker build -t us.icr.io/sn-labs-anamikaa/medical_app .
+        docker tag us.icr.io/sn-labs-anamikaa/medical_app:latest us.icr.io/sn-labs-anamikaa/medical_app:latest
 
     - name: Push Docker image
       run: |
-        docker push us.icr.io/$MY_NAMESPACE/medical_app:latest
+        docker push us.icr.io/sn-labs-anamikaa/medical_app:latest
