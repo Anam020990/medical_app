@@ -29,7 +29,8 @@ jobs:
       run: |
         docker build -t us.icr.io/sn-labs-anamikaa/medical_app .
         docker tag us.icr.io/sn-labs-anamikaa/medical_app:latest us.icr.io/sn-labs-anamikaa/medical_app:latest
-
+    - name: Docker login
+      run: docker login
     - name: Push Docker image
       run: |
         docker push us.icr.io/sn-labs-anamikaa/medical_app:latest
