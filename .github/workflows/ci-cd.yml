@@ -1,29 +1,35 @@
-name: CI/CD for React App
+name: CI/CD
 
 on:
   push:
     branches:
-      - master  # Adjust this according to your branch name
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    env:
+      CI: false
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
+    - name: Setup Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: '14'
+
     - name: Install dependencies
       run: npm install
 
-    - name: Build with linting warnings suppressed
-      env:
-        CI: false  # Set CI=false to suppress linting warnings
+    - name: Build
       run: npm run build
 
-    - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@3.7.1
-      with:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        BRANCH: master  # Adjust if you're deploying to a different branch
-        FOLDER: build     # Adjust if your build output folder is different
+    - name: Build Docker image
+      run: |
+        docker build -t us.icr.io/sn-labs-anamikaa/medical_app .
+        docker tag us.icr.io/sn-labs-anamikaa/medical_app:latest us.icr.io/sn-labs-anamikaa/medical_app:latest
+    - name: Docker login
+      run: docker login
+    - name: Docker run
+      run: docker run -d -p 8080:3000 us.icr.io/sn-labs-anamikaa/medical_app:latest
