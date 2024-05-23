@@ -1,23 +1,17 @@
-name: CI/CD
+name: CI/CD for React App
 
 on:
   push:
     branches:
-      - master
+      - master  # Adjust this according to your branch name
 
 jobs:
   build:
     runs-on: ubuntu-latest
-    env:
-      CI: false
+
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '14'
 
     - name: Install dependencies
       run: npm install
@@ -25,12 +19,9 @@ jobs:
     - name: Build
       run: npm run build
 
-    - name: Build Docker image
-      run: |
-        docker build -t us.icr.io/sn-labs-anamikaa/medical_app .
-        docker tag us.icr.io/sn-labs-anamikaa/medical_app:latest us.icr.io/sn-labs-anamikaa/medical_app:latest
-    - name: Docker login
-      run: docker login
-    - name: Push Docker image
-      run: |
-        docker push us.icr.io/sn-labs-anamikaa/medical_app:latest
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@3.7.1
+      with:
+        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        BRANCH: master  # Adjust if you're deploying to a different branch
+        FOLDER: build     # Adjust if your build output folder is different
