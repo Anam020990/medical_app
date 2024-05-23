@@ -29,7 +29,13 @@ jobs:
       run: |
         docker build -t us.icr.io/sn-labs-anamikaa/medical_app .
         docker tag us.icr.io/sn-labs-anamikaa/medical_app:latest us.icr.io/sn-labs-anamikaa/medical_app:latest
+      
     - name: Docker login
-      run: docker login
-    - name: Docker run
-      run: docker run -d -p 8080:3000 us.icr.io/sn-labs-anamikaa/medical_app:latest
+      run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }} us.icr.io
+
+    - name: Docker push
+      run: docker push us.icr.io/sn-labs-anamikaa/medical_app:latest
+
+    - name: Deploy to IBM Code Engine
+      run: |
+        ibmcloud ce app update --name my-app --image us.icr.io/sn-labs-anamikaa/medical_app:latest
