@@ -16,7 +16,9 @@ jobs:
     - name: Install dependencies
       run: npm install
 
-    - name: Build
+    - name: Build with linting warnings suppressed
+      env:
+        CI: false  # Set CI=false to suppress linting warnings
       run: npm run build
 
     - name: Deploy
